@@ -14,16 +14,16 @@ bot.run true
 
 # commands go here
 
-bot.command :get_request do |event|
+bot.command :get_rating do |event, account_id, character_tag|
 
-uri = URI('http://ratingupdate.info/api/player_rating/2EC3EA2818411DB/TE') 
+uri = URI('http://ratingupdate.info/api/player_rating/' + account_id + '/' + character_tag) 
 response = HTTParty.get(uri)
 
   if response.success?
     data = JSON.parse(response.body)
     puts "API Data: #{data}"
 
-    event.respond "MMR: #{data["value"]}, DEVIATION: #{data["deviation"]}"
+    event.respond "MMR: #{data["value"].round} DEVIATION: #{data["deviation"].round}"
   else
     puts "Error: #{response.code}"
     event.respond "Error: #{response.code}"
