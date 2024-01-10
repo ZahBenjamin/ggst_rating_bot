@@ -49,4 +49,4 @@ Feel free to contribute to the bot's development!
 
 ## License
 
-[Specify the license under which the code is released, if applicable.]
+GNU GENERAL PUBLIC LICENSE v. 3
