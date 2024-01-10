@@ -2,7 +2,6 @@
 
 require 'discordrb'
 require 'dotenv'
-# require 'net/http'
 require 'httparty'
 Dotenv.load
 
@@ -14,7 +13,7 @@ bot.run true
 
 # commands go here
 
-bot.command(:rating, description: 'Lorum ipsum') do |event, account_id, character_tag|
+bot.command(:rating, description: 'Retrieves player MMR and deviation from ratingupdate.info API.') do |event, account_id, character_tag|
 
 uri = URI('http://ratingupdate.info/api/player_rating/' + account_id + '/' + character_tag) 
 response = HTTParty.get(uri)
@@ -30,10 +29,7 @@ response = HTTParty.get(uri)
   end
 end
 
-
-# text based commands
-
-bot.command :help do |event|
+bot.command(:help, description: 'Give list of commands and advice for ggst_rating_bot') do |event|
   event << 'Type !rating   <account_id>   <character_tag>  to get your MMR on ratingupdate!'
   event << 'Type !invite to get an invite code for the discord bot'
   event << 'Find account id and character by searching for your user on ratingupdate.info'
@@ -44,11 +40,8 @@ bot.command :tags do |event|
   event << 'SO  ==  Sol'
 end
 
+bot.command(:invite, description: 'Invite the bot to other servers') do |event|
 
-
-bot.command :invite do |event|
-  # This simply sends the bot's invite URL, without any specific permissions,
-  # to the channel.
   event.bot.invite_url
 end
 
