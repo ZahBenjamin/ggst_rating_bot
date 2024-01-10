@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 require 'discordrb'
 require 'dotenv'
@@ -36,9 +35,6 @@ bot.command(:help, description: 'Give list of commands and advice for ggst_ratin
   event << 'After you find the right account_id and character code, try leaving a note on the bot profile on the right'
 end
 
-bot.command :tags do |event|
-  event << 'SO  ==  Sol'
-end
 
 bot.command(:invite, description: 'Invite the bot to other servers') do |event|
 
