@@ -6,3 +6,6 @@ gem 'rspec'
 gem 'discordrb'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'httparty'
+
+# DATABASE
+gem 'pg'
