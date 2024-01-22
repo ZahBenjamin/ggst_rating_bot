@@ -5,6 +5,7 @@ bot.message(content: /!store (.+)/) do |event|
   input = event.message.content.match(/!store (.+)/)[1]
   user_id = event.user.id
   channel_id = event.channel.id
+  guild_id = event.guild.id
 
   # Store input in the database, associating it with user_id and channel_id
   # (Database interaction code will depend on your chosen database)

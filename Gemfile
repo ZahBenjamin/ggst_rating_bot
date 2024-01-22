@@ -7,6 +7,7 @@ gem 'discordrb'
 gem 'dotenv-rails', groups: [:development, :test]
 gem 'httparty'
 gem 'activerecord'
+gem 'rerun'
 
 # DATABASE
 gem 'pg'
