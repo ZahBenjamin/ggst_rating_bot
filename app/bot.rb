@@ -2,7 +2,7 @@
 require 'discordrb'
 require 'dotenv'
 require 'httparty'
-require './db/schema.rb'
+require './db/init.rb'
 Dotenv.load
 
 
