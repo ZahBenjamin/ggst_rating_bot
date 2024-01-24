@@ -138,6 +138,7 @@ DEPENDENCIES
   rack
   rerun
   rspec
+  rspec-core
 
 BUNDLED WITH
    2.4.10

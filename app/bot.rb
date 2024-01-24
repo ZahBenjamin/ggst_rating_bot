@@ -48,10 +48,84 @@ bot.command(:set_account, description: 'Set rating_update account id to discord 
   puts "Here is the GUILD ID: #{event.server.id}"
   puts "Here is the DISCORD ACCOUNT ID: #{event.user.id}"
   puts "Here is the hello world"
+  puts "Here is first user#{Ramlethal.find_by(id: 1)} "
   event << 'Successfully saved rating_update ID to bot!'
   # 1. take inputs and put in the DB table
   # 2. Make sure that when stored in DB it does not create duplicates, just overwrites old input for account_id
+  # .save is used to save to database
+
+  # if guild_id AND discord_account_id IS UNIQUE,
+  #   Ramlethal.save in DB AS NEW ROW
+  # else
+  #   take guild_id AND discord_account_id 
+  # end
+
+  # if valid
+  #   Ramlethal.create(guild: event.server.id, account: event.user.id, rating_update: account_id)
+  # else 
+  #   Ramlethal.update(rating_update: account_id)
+  # end
 end
+
+bot.command(:db_check, description: 'Placeholder method to check how to get elements from the db/tables') do |event|
+  puts "DB_CHECK TOOK PLACE"
+  puts "Here is a call to the DB #{Ramlethal.find(1).mmr}"
+  # puts "Here is a call to the DB #{Ramlethal.find_by(id: 1).mmr}"   RETURNS FOO
+  # puts "Here is a call to the DB #{Ramlethal.find(1).mmr}"          THIS ALSO RETURNS FOO
+  if 
+    event << "Here is your server id: #{event.server.id} AND your discord account id: #{event.user.id}"
+  else 
+    event << "Sorry bucko your value aint here" # not returning this, unknown why
+  end
+end
+
+  bot.command(:test, description: 'First attempt at making db save work') do |event, account_id|
+    server_id = event.server.id
+    user_id   = event.user.id
+
+    db_check = Ramlethal.find_by(guild: server_id)
+
+    if db_check.nil?
+      user = Ramlethal.new do |u|
+        u.guild = server_id
+        u.account = user_id
+        u.rating_update = account_id
+      end
+      user.save 
+
+      puts "THIS IS THE IF"
+      event << "Account created, this is where id goes to show it was made"
+    elsif account_id.nil?
+      puts "Account id is nil"
+      event << "Sorry buckaroo you need to put an account id or this won't work"
+    else
+      puts "THIS IS THE ELSE"
+      event << "Account already exists, input updated"
+      Ramlethal.update(rating_update: account_id)
+      puts "Here is the current account_id: #{Ramlethal.find_by(guild: server_id).rating_update}"
+    end
+  end    
+
+
+  bot.command(:calvados, description: 'GET MMR from calling DB') do |event, character_tag|
+    server_id = event.server.id
+    user_id   = event.user.id
+
+    account_id = Ramlethal.find_by(guild: server_id, account: user_id).rating_update
+
+    uri = URI('http://ratingupdate.info/api/player_rating/' + account_id + '/' + character_tag) 
+    response = HTTParty.get(uri)
+
+    if response.success?
+     data = JSON.parse(response.body)
+      puts "API Data: #{data}"
+      puts "User Input: #{account_id}"
+      event.respond "MMR: #{data["value"].round} ± #{data["deviation"].round}"
+    else
+      puts "Error: #{response.code}"
+      event.respond "Error: #{response.code}"
+    end
+  end
 
 
 bot.join

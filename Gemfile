@@ -8,6 +8,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'httparty'
 gem 'activerecord'
 gem 'rerun'
+gem 'rspec-core'
 
 # DATABASE
 gem 'pg'
