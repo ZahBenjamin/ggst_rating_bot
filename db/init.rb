@@ -13,10 +13,6 @@ begin
   
   ActiveRecord::Base.establish_connection(db_config)
   puts "Connected to database!"
-  # THE RESULTS DID NOT RETURN EXPECTED
-  # result = Ramlethal.connection.execute("SELECT * FROM  ramlethals;")
-  # result = Ramlethal.find_by_sql("SELECT * FROM  ramlethals;")
-  # puts "Result here #{result}"
   Ramlethal.columns.each do |col|
     puts col.name
     puts col.type
@@ -48,3 +44,8 @@ end
 #         row.values_at('pid', 'usename', 'query')
 #     end
 #   end
+
+  # THE RESULTS DID NOT RETURN EXPECTED
+  # result = Ramlethal.connection.execute("SELECT * FROM  ramlethals;")
+  # result = Ramlethal.find_by_sql("SELECT * FROM  ramlethals;")
+  # puts "Result here #{result}"
