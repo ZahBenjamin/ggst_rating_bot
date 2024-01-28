@@ -43,14 +43,17 @@ bot.command(:invite, description: 'Invite the bot to other servers') do |event|
   event.bot.invite_url
 end
 
-
-bot.command(:test, description: 'First attempt at making db save work') do |event, account_id|
+# SET ACCOUNT - MVP DONE - CLEAN UP ADD TESTING 
+bot.command(:set_account, description: 'First attempt at making db save work') do |event, account_id|
   server_id = event.server.id
   user_id   = event.user.id
   
   this_account = Ramlethal.find_by(guild: server_id, account: user_id)
   
-  if this_account.nil?
+  if account_id.nil?
+    puts "Account id is nil"
+    event << "Sorry buckaroo you need to put an account id or this won't work"
+  elsif this_account.nil?
     user = Ramlethal.new do |u|
       u.guild = server_id
       u.account = user_id
@@ -58,29 +61,26 @@ bot.command(:test, description: 'First attempt at making db save work') do |even
     end
     user.save 
     
-    puts "THIS IS THE IF"
-    event << "Account created, this is where id goes to show it was made"
-  elsif account_id.nil?
-    puts "Account id is nil"
-    event << "Sorry buckaroo you need to put an account id or this won't work"
+    event << "Sucessfully stored id"
+    # puts "New account created, added to db, here is the new input #{this_account.rating_update}"
   else
-    puts "THIS IS THE ELSE"
-    event << "Account already exists, input updated"
     this_account.update(rating_update: account_id)
-    puts "Here is the current account_id: #{Ramlethal.find_by(guild: server_id).rating_update}"
+    puts "Here is the current account_id after update: #{this_account.rating_update}"
+    event << "Account already exists, input updated"
   end
 end    
 
-
-bot.command(:calvados, description: 'GET MMR from calling DB') do |event, character_tag|
+# GET MMR AFTER ACCOUNT IS SET - MVP WORKING - NEEDS ERROR MESSAGE IF NO TAG PUT
+bot.command(:mmr, description: 'GET MMR from calling DB') do |event, character_tag|
   server_id = event.server.id
   user_id   = event.user.id
   
   account_id = Ramlethal.find_by(guild: server_id, account: user_id).rating_update
+
   
-  uri = URI('http://ratingupdate.info/api/player_rating/' + account_id + '/' + character_tag) 
+  uri = URI('http://ratingupdate.info/api/player_rating/' + account_id + '/' + character_tag.upcase) 
   response = HTTParty.get(uri)
-  
+
   if response.success?
     data = JSON.parse(response.body)
     puts "API Data: #{data}"
@@ -89,17 +89,16 @@ bot.command(:calvados, description: 'GET MMR from calling DB') do |event, charac
   else
     puts "Error: #{response.code}"
     event.respond "Error: #{response.code}"
+    event.respond "Make sure you !set_account properly and put a valid character tag"
   end
 end
 
-# notes
-# puts "Here is a call to the DB #{Ramlethal.find(1).mmr}"
-# puts "Here is a call to the DB #{Ramlethal.find_by(id: 1).mmr}"   RETURNS FOO
-# puts "Here is a call to the DB #{Ramlethal.find(1).mmr}"          THIS ALSO RETURNS FOO
+bot.command(:match_up, description: 'Get matchup knowledge') do |event, character_tag, enemy_tag|
+end
 
-# puts "Here is the RATING UPDATE ACCOUNT ID: #{account_id}"
-# puts "Here is the GUILD ID: #{event.server.id}"
-# puts "Here is the DISCORD ACCOUNT ID: #{event.user.id}"
-# puts "Here is first user#{Ramlethal.find_by(id: 1)} "
+
+bot.command(:match_up_all, description: 'Send matchup knowledge for all characters') do |event, character_tag, enemy_tag|
+
+end
 
 bot.join
