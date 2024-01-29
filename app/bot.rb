@@ -29,10 +29,10 @@ end
 
 # HELP Command to describe how to use bot
 bot.command(:help, description: 'Give list of commands and advice for ggst_rating_bot') do |event|
-  event << 'Type !rating   <account_id>   <character_tag>  to get your MMR on ratingupdate!'
-  event << 'Type !invite to get an invite code for the discord bot'
-  event << 'Find account id and character by searching for your user on ratingupdate.info'
-  event << 'After you find the right account_id and character code, try leaving a note on the bot profile on the right'
+  event << 'Type !set_account   <account_id>  to save your account from ratingupdate!'
+  event << 'Type !mmr   <character_tag> to get current mmr for that character'
+  event << 'Type !profile to get a link with your ratingupdate profile!'
+  event << 'A detailed explaination of commands can be found on the github readme'
   puts "Here is server id and name: #{event.server.name} AKA #{event.server.id}"
   puts "Here is user name and id: #{event.user.name} AKA #{event.user.id}"
 end
@@ -90,6 +90,19 @@ bot.command(:mmr, description: 'GET MMR from calling DB') do |event, character_t
     puts "Error: #{response.code}"
     event.respond "Error: #{response.code}"
     event.respond "Make sure you !set_account properly and put a valid character tag"
+  end
+end
+
+bot.command(:profile, description: 'Get user profile after set_account done') do |event|
+  server_id = event.server.id
+  user_id   = event.user.id
+  account_id = Ramlethal.find_by(guild: server_id, account: user_id).rating_update
+  uri = URI('http://ratingupdate.info/player/' + account_id) 
+
+  if account_id.nil?
+    event.respond "Make sure to use !set_account properly before"
+  else
+    event.respond "Here is your rating_update profile: #{uri}"
   end
 end
 

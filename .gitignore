@@ -1,6 +1,5 @@
 config/secrets.yml
 config/database.yaml
-config/database.yml
 .env
 NOTES.md
 SECRET.md
