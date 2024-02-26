@@ -5,13 +5,6 @@ require 'httparty'
 require './db/init.rb'
 Dotenv.load
 
-# Getting account id
-def parse_ru(input)
-
-  split_array = input.scan(/[^\/]+/)
-  id = split_array.find{ |x| x.match?(/[\d]/) }
-end
-
 
 
 # Start bot
@@ -37,7 +30,7 @@ end
 
 # HELP Command to describe how to use bot
 bot.command(:help, description: 'Give list of commands and advice for ggst_rating_bot') do |event|
-  event << 'Type !set_account   <account_id>  to save your account from ratingupdate!'
+  event << 'Type !set_account <rating update account url> to save your account to the bot!'
   event << 'Type !mmr   <character_tag> to get current mmr for that character'
   event << 'Type !profile to get a link with your ratingupdate profile!'
   event << 'A detailed explaination of commands can be found on the github readme'
@@ -56,6 +49,9 @@ bot.command(:set_account, description: 'First attempt at making db save work') d
   server_id = event.server.id
   user_id   = event.user.id
   
+  split_array = account_id.scan(/[^\/]+/)
+  account_id = split_array.find{ |x| x.match?(/[\d]/)}
+
   this_account = Ramlethal.find_by(guild: server_id, account: user_id)
 
   # if account_id.include?(/[\/]/)
@@ -121,12 +117,12 @@ bot.command(:profile, description: 'Get user profile after set_account done') do
 end
 
 bot.command(:test_set, description: 'Set account simplified') do |event, account_id|
-
-  if account_id.include?(/[\/]/)
+  
     split_array = account_id.scan(/[^\/]+/)
     account_id = split_array.find{ |x| x.match?(/[\d]/)}
-  end
 
+
+    event << "Here is the id #{account_id}"
   puts account_id
 end
 
