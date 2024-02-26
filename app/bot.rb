@@ -5,6 +5,14 @@ require 'httparty'
 require './db/init.rb'
 Dotenv.load
 
+# Getting account id
+def parse_ru(input)
+
+  split_array = input.scan(/[^\/]+/)
+  id = split_array.find{ |x| x.match?(/[\d]/) }
+end
+
+
 
 # Start bot
 bot = Discordrb::Commands::CommandBot.new token: ENV['BOT_TOKEN'], prefix:'!'
@@ -44,11 +52,17 @@ bot.command(:invite, description: 'Invite the bot to other servers') do |event|
 end
 
 # SET ACCOUNT - MVP DONE - CLEAN UP ADD TESTING 
-bot.command(:set_account, description: 'First attempt at making db save work') do |event, account_id|
+bot.command(:set_account, description: 'First attempt at making db save work') do |event, account_id|    
   server_id = event.server.id
   user_id   = event.user.id
   
   this_account = Ramlethal.find_by(guild: server_id, account: user_id)
+
+  # if account_id.include?(/[\/]/)
+  #   split_array = account_id.scan(/[^\/]+/)
+  #   account_id = split_array.find{ |x| x.match?(/[\d]/)}
+  # end
+
   
   if account_id.nil?
     puts "Account id is nil"
@@ -104,6 +118,16 @@ bot.command(:profile, description: 'Get user profile after set_account done') do
   else
     event.respond "Here is your rating_update profile: #{uri}"
   end
+end
+
+bot.command(:test_set, description: 'Set account simplified') do |event, account_id|
+
+  if account_id.include?(/[\/]/)
+    split_array = account_id.scan(/[^\/]+/)
+    account_id = split_array.find{ |x| x.match?(/[\d]/)}
+  end
+
+  puts account_id
 end
 
 bot.command(:match_up, description: 'Get matchup knowledge') do |event, character_tag, enemy_tag|

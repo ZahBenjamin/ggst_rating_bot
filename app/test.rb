@@ -36,3 +36,8 @@ end
 ## GH Actions?
 
 ### CONSIDERATIONS: Error Handling, Security, Data Management
+
+def parse_ru(input)
+  split_array = input.scan(/[^\/]+/)
+  return split_array[-2]
+end
