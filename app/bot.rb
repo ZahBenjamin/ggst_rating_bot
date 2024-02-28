@@ -54,12 +54,6 @@ bot.command(:set_account, description: 'First attempt at making db save work') d
 
   this_account = Ramlethal.find_by(guild: server_id, account: user_id)
 
-  # if account_id.include?(/[\/]/)
-  #   split_array = account_id.scan(/[^\/]+/)
-  #   account_id = split_array.find{ |x| x.match?(/[\d]/)}
-  # end
-
-  
   if account_id.nil?
     puts "Account id is nil"
     event << "Sorry buckaroo you need to put an account id or this won't work"
